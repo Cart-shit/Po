@@ -112,9 +112,7 @@ public class Installer {
 
         FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/sodium-options.json"), FileUtil.loadFromAssetToByte(activity, "sodium-options.json"));
         FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/vivecraft-config.properties"), FileUtil.loadFromAssetToByte(activity, "vivecraft-config.properties"));
-        FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/tweakeroo.json"), FileUtil.loadFromAssetToByte(activity, "tweakeroo.json"));
         FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/smoothboot.json"), FileUtil.loadFromAssetToByte(activity, "smoothboot.json"));
-        FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/malilib.json"), FileUtil.loadFromAssetToByte(activity, "malilib.json"));
         FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/immediatelyfast.json"), FileUtil.loadFromAssetToByte(activity, "immediatelyfast.json"));
         FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/moreculling.toml"), FileUtil.loadFromAssetToByte(activity,"moreculling.toml"));
         FileUtils.writeByteArrayToFile(new File(instance.gameDir + "/config/modernfix-mixins.properties"), FileUtil.loadFromAssetToByte(activity,"modernfix-mixins.properties"));
@@ -135,12 +133,22 @@ public class Installer {
             String path = asset.hash.substring(0, 2) + "/" + asset.hash;
             File assetFile = new File(gameDir + "/assets/objects/", path);
 
-            if (!assetFile.exists()) {
+            for (int i = 0; i < 5; i++) {
+                if (i == 4) throw new RuntimeException(String.format("Asset download of %s failed after 5 retries", entry.getKey()));
+
+                if (!assetFile.exists()) {
                     Logger.getInstance().appendToLog("Downloading: " + entry.getKey());
-                try {
-                    DownloadUtils.downloadFile(Constants.MOJANG_RESOURCES_URL + "/" + path, assetFile);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    try {
+                        DownloadUtils.downloadFile(Constants.MOJANG_RESOURCES_URL + "/" + path, assetFile);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if (DownloadUtils.compareSHA1(assetFile, asset.hash)) {
+                    break;
+                } else {
+                    assetFile.delete();
                 }
             }
         }

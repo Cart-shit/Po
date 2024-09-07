@@ -5,7 +5,7 @@
 			"coreMods": [
 				{
 					"slug": "Vivecraft",
-					"vesrion": "1.0",
+					"version": "1.0",
 					"download_link": "https://github.com/Cart-shit/VivecraftModQC/releases/download/1.21/vivecraft-1.21-1.1.11-b5-fabric.jar"
 				},
 				{
@@ -16,11 +16,13 @@
 			],
 			"defaultMods": [
 				{
-					"slug": "Sodium",
+					"slug": "Embeddium",
 					"version": "0.6.0-beta.1",
 					"download_link": "https://cdn.modrinth.com/data/AANobbMI/versions/oZOSEhyy/sodium-fabric-0.6.0-beta.1%2Bmc1.21.jar"
 				}
-			],
+				]
+		},
+		{
 			"name": "1.20.6",
 			"coreMods": [
 				{
